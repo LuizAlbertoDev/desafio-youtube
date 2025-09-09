@@ -1,0 +1,33 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: [ main ] # Ou o nome do seu branch principal
+
+permissions:
+  contents: read
+  pages: write
+  deployments: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './' # Isso indica que todos os arquivos na raiz (incluindo index.html) devem ser usados
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
